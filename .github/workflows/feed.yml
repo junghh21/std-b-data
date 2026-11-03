@@ -1,0 +1,24 @@
+name: feed
+on:
+  schedule:
+    - cron: '11 */6 * * *'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [run-std-b]
+permissions:
+  contents: write
+concurrency:
+  group: feed
+  cancel-in-progress: false
+jobs:
+  gen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - run: python3 gen.py
+      - name: Publish feed to data branch (single squashed commit)
+        run: |
+          cd out && git init -q -b data && git add -A
+          git -c user.name=github-actions[bot] -c user.email=github-actions[bot]@users.noreply.github.com commit -qm "feed $(date -u +%FT%TZ) [skip ci]"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" data
