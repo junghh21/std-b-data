@@ -1,0 +1,14 @@
+{
+ "schema_version": 1,
+ "generated_at": "2026-11-14T17:58:22+00:00",
+ "items": [
+  {
+   "name": "alpha",
+   "v": 1
+  },
+  {
+   "name": "beta",
+   "v": 2
+  }
+ ]
+}
